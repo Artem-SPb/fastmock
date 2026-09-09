@@ -66,7 +66,7 @@ def test_chaos_middleware_delay():
     
     import time
     start = time.time()
-    client.get("/")
+    client.get("/fake")
     end = time.time()
     
     assert (end - start) >= 0.1
@@ -117,6 +117,11 @@ def test_crud_operations():
                 application/json:
                   schema:
                     type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
       /items/{id}:
         delete:
           responses:

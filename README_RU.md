@@ -4,6 +4,7 @@
 
 # ⚡ FastMock API Engine
 
+[![PyPI version](https://img.shields.io/pypi/v/fastmock-api.svg)](https://pypi.org/project/fastmock-api/)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
 [![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?logo=docker&logoColor=white)](https://www.docker.com/)

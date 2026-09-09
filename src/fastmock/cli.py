@@ -22,9 +22,17 @@ def start(
     if persist:
         settings.persist_path = persist
 
-    typer.echo(f"Starting FastMock API Engine on http://{host}:{port}")
+    typer.echo("=" * 50)
+    typer.echo(f"Starting FastMock API Engine")
+    typer.echo(f"➜  Local:   http://127.0.0.1:{port}/docs")
+    if host == "0.0.0.0":
+        typer.echo(f"➜  Network: http://<your-network-ip>:{port}/docs")
+    else:
+        typer.echo(f"➜  Bind:    http://{host}:{port}/docs")
+    
     if persist:
-        typer.echo(f"Persistence enabled: {persist}")
+        typer.echo(f"➜  Persist: {persist}")
+    typer.echo("=" * 50)
         
     uvicorn.run(
         "fastmock.main:app",

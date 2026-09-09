@@ -9,6 +9,7 @@ router = APIRouter()
 @router.api_route(
     "/{path:path}", 
     methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    include_in_schema=False,
     summary="Dynamic Mock Router | Динамический генератор ответов",
     description="**EN:** Catch-all endpoint that intercepts requests and responds with generated mock data based on the uploaded OpenAPI spec.\n\n**RU:** Эндпоинт, который перехватывает все запросы и отвечает сгенерированными мок-данными на основе загруженной OpenAPI спецификации."
 )
@@ -32,19 +33,26 @@ async def catch_all(request: Request, path: str):
             detail=f"Path {full_path} not found in OpenAPI spec for method {request.method}."
         )
         
-    # 3. Эвристика сохранения (CRUD) для POST/PUT/PATCH
+    # 3. Обработка сохранения (CRUD) для POST/PUT/PATCH
     if request.method in ["POST", "PUT", "PATCH"]:
         try:
             body = await request.json()
             if isinstance(body, dict):
                 saved_data = crud_manager.save_data(full_path, body)
-                # Возвращаем сохраненные данные, чтобы симулировать успешное создание
+                # Возвращаем сохраненные данные
                 return JSONResponse(
                     content=saved_data, 
                     status_code=201 if request.method == "POST" else 200
                 )
         except Exception:
-            pass # Если тело не JSON или не распарсилось, генерируем мок по схеме
+            pass 
+            
+    # 3.5. Обработка удаления (CRUD) для DELETE
+    if request.method == "DELETE":
+        deleted = crud_manager.delete_data(full_path)
+        if deleted:
+            return JSONResponse(content={"message": "Deleted successfully"}, status_code=200)
+        # Если не нашли что удалить, продолжаем генерировать мок из схемы
             
     # 4. Поиск сохраненных данных для GET
     if request.method == "GET":

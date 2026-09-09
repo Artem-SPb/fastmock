@@ -1,27 +1,40 @@
+import json
+import os
 from typing import Any, Dict
+from fastmock.core.config import settings
 
 class AppState:
     def __init__(self) -> None:
-        # Глобальная спецификация (разобранная)
         self.spec: Dict[str, Any] | None = None
-        
-        # In-Memory база данных: словарь словарей для базового CRUD
-        # Пример: {"users": {"1": {"id": "1", "name": "Test"}}}
         self.db: Dict[str, Dict[str, Any]] = {}
         
-        # Глобальные настройки хаоса
         self.chaos_delay_ms: int = 0
         self.chaos_error_rate: float = 0.0
         self.chaos_allowed_errors: list[int] = [500, 502, 503]
 
     def clear_db(self) -> None:
-        """Очищает In-Memory базу данных."""
         self.db = {}
+        self.save_db()
 
     def reset_chaos(self) -> None:
-        """Сбрасывает настройки хаоса по умолчанию."""
         self.chaos_delay_ms = 0
         self.chaos_error_rate = 0.0
 
-# Глобальный singleton-объект состояния
+    def load_db(self):
+        if settings.persist_path and os.path.exists(settings.persist_path):
+            try:
+                with open(settings.persist_path, "r", encoding="utf-8") as f:
+                    self.db = json.load(f)
+                print(f"[*] Loaded database state from {settings.persist_path}")
+            except Exception as e:
+                print(f"[!] Failed to load database state: {e}")
+
+    def save_db(self):
+        if settings.persist_path:
+            try:
+                with open(settings.persist_path, "w", encoding="utf-8") as f:
+                    json.dump(self.db, f, indent=2, ensure_ascii=False)
+            except Exception as e:
+                print(f"[!] Failed to save database state: {e}")
+
 app_state = AppState()

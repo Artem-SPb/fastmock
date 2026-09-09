@@ -1,69 +1,67 @@
-# FastMock: Detailed Usage Guide
+# How to use FastMock (Guide for Frontend & Mobile Developers)
 
-Welcome to the FastMock API Engine documentation. This guide explains how to leverage all the features of the mock server.
-
-## 1. Loading your Specification (OpenAPI)
-
-FastMock is driven by your OpenAPI 3.0/3.1 specification. 
-There are two ways to feed your spec to the server:
-
-### Method A: Auto-load on Startup
-Place a file named `openapi.yaml` in the root folder of the project. When you run `docker compose up` or the `fastmock` CLI command, the server will automatically detect it and generate endpoints.
-
-> 💡 **Quick Test:** The repository includes a ready-to-use `openapi.example.yaml`. To quickly test the engine, just copy it:
-> ```bash
-> cp openapi.example.yaml openapi.yaml
-> ```
-> Then restart the server. You'll instantly get working `/users` and `/products` endpoints.
-
-### Method B: Hot-Reload via Admin API
-If the server is already running, you can upload a new spec without restarting:
-1. Open the Swagger UI: `http://127.0.0.1:8000/docs`
-2. Find the `POST /_admin/specs` endpoint.
-3. Upload your YAML or JSON file.
+If the backend isn't ready yet, but you need to build UI, render lists, handle network errors, or plot real-time charts — **FastMock** will save your time. You don't need to know Python or databases to run it.
 
 ---
 
-## 2. Smart Data Generation (Faker)
+## 🛠 Step 1: Start the server (Takes 1 minute)
 
-If your OpenAPI specification doesn't explicitly provide an `example` for a field, FastMock will generate realistic data based on field types and names.
+You don't need to configure environments. Everything works via Docker.
 
-**How does it guess?**
-* **By format:** `uuid` -> valid UUIDv4, `email` -> random email address, `date-time` -> ISO8601 timestamp.
-* **By field name:** If a field is named `first_name`, it generates a real human name. If it's `phone`, it generates a phone number.
-* **By base type:** `string` -> random word, `integer` -> number between 1-100, `array` -> array of 1-3 items.
-
----
-
-## 3. Stateful Responses (In-Memory CRUD)
-
-FastMock can remember data during a session.
-For example, if your spec has `POST /users` and `GET /users`:
-
-1. Send a `POST /users` request with a JSON body.
-2. FastMock will generate an `id` for it (if missing) and save it in memory.
-3. Send a `GET /users` request, and you will receive an array containing the user you just created!
-
-> **Note:** Data is stored in RAM (In-Memory) and will be lost on server restart. You can manually clear the database by calling `DELETE /_admin/state`.
+1. Ensure you have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed.
+2. Download this project (or run `git clone`).
+3. Open a terminal in the project folder and type:
+   ```bash
+   docker compose up
+   ```
+4. Done! The server is running. Open the dashboard in your browser: **http://127.0.0.1:8000/docs**
 
 ---
 
-## 4. Network Simulation (Chaos Engineering)
+## 📄 Step 2: Add API Contracts (Swagger)
 
-Frontend and mobile applications need to handle poor network conditions and backend failures gracefully. FastMock allows you to simulate this easily.
+FastMock doesn't know in advance which endpoints your app needs. You have to provide a specification (OpenAPI / Swagger file).
 
-### Header-based Simulation (Per-Request)
-You can inject chaos into specific requests by adding custom headers from your client:
-* `X-Mock-Delay: 2000` — Delays the response by exactly 2 seconds (2000 ms).
-* `X-Mock-Status: 503` — Forces the server to return a 503 Service Unavailable error.
+1. Ask your backend developer for the `openapi.yaml` file (or write a simple one yourself).
+2. Go to the dashboard (http://127.0.0.1:8000/docs).
+3. Find the green **`POST /_admin/specs`** button, click *Try it out*, select your file, and hit *Execute*.
+4. **Magic:** The server instantly generates all the endpoints defined in the file!
 
-### Global Simulation (Admin API)
-You can enable chaos globally for *all* requests via the Swagger UI (`PUT /_admin/config`):
-```json
-{
-  "chaos_delay_ms": 1500,
-  "chaos_error_rate": 0.2,
-  "chaos_allowed_errors": [500, 502, 503]
-}
-```
-*In this example: every request will be delayed by 1.5 seconds, and 20% of requests will randomly fail with a 500, 502, or 503 status code.*
+> 💡 **Quick Start:** There is an `openapi.example.yaml` file in the project folder. Just copy it, rename it to `openapi.yaml`, and restart the server. You'll instantly get working `/users` and `/products` endpoints.
+
+---
+
+## 📱 Step 3: Connect your application
+
+Now, simply change the base URL in your iOS/Android/Web app's code to `http://127.0.0.1:8000`.
+
+### 🧠 Smart Data Generation
+Make a `GET /users` request from your app. You won't get an empty response. FastMock will generate realistic JSON! If a field is named `email`, it returns a real random email; if it's `id`, it generates a UUID.
+
+### 💾 Data Persistence (Forms)
+Want to test a profile creation form?
+1. Send a `POST /users` from your app with any JSON (e.g., `{"name": "John"}`).
+2. Make a `GET /users` request. John will appear in the list!
+The data is saved. *(Note: if you start the server with the `--persist db.json` flag, data is saved to a file that you can edit right in your text editor!)*
+
+---
+
+## 🌩 Step 4: Testing Errors (Chaos Engineering)
+
+How will your app behave if the user has a poor 3G connection in the subway, or the backend crashes with a 500 error?
+You don't need to unplug your ethernet cable! Just add Headers to your requests from the app:
+
+* `X-Mock-Delay: 2000` — The server will "think" for exactly 2 seconds before responding. Check your loading spinners!
+* `X-Mock-Status: 500` — The server will forcibly return a 500 Server Error. Test your error alerts and fallback screens!
+
+---
+
+## ⏱ Step 5: WebSockets Testing (Real-time)
+
+If you're building a chat or a crypto chart, you need WebSockets. FastMock can simulate those too!
+
+Connect your app to `ws://127.0.0.1:8000/ws/chat`.
+1. **Echo:** Send any text, and it comes right back.
+2. **Data Stream:** Send a special JSON `{"action": "stream", "interval": 1}`, and the server will infinitely stream new generated data to you every second! (Send `{"action": "stop"}` to pause it).
+
+Happy coding! 🚀

@@ -72,6 +72,15 @@ async def upload_spec(file: UploadFile = File(..., description="**EN:** OpenAPI 
     except Exception as e:
         return {"error": f"Failed to parse spec: {str(e)}"}
 
+@router.delete(
+    "/specs",
+    summary="Clear OpenAPI Spec | Удалить спецификацию",
+    description="**EN:** Removes the currently loaded OpenAPI specification and disables all mock routes.\n\n**RU:** Удаляет текущую загруженную спецификацию OpenAPI и отключает все мок-роуты."
+)
+async def clear_spec():
+    app_state.spec = None
+    return {"message": "OpenAPI specification cleared. No mock routes are currently active."}
+
 @router.get(
     "/routes",
     summary="List Mocked Routes | Список мок-роутов",

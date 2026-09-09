@@ -14,6 +14,9 @@ from fastmock.core.state import app_state
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Lifespan события для запуска и остановки сервера."""
     
+    # Загружаем сохраненную базу данных, если она есть
+    app_state.load_db()
+
     # Пытаемся загрузить дефолтную спеку при старте
     if os.path.exists(settings.default_spec_path):
         print(f"[*] Found default spec at {settings.default_spec_path}. Loading...")
@@ -54,6 +57,7 @@ Upload your OpenAPI spec via `/_admin/specs` and get a working mock API instantl
 from fastmock.api.middlewares import ChaosMiddleware
 from fastmock.api.admin_routes import router as admin_router
 from fastmock.api.dynamic_router import router as mock_router
+from fastmock.api.ws_router import router as ws_router
 
 # Добавляем Middleware (порядок важен)
 app.add_middleware(ChaosMiddleware)
@@ -61,7 +65,15 @@ app.add_middleware(ChaosMiddleware)
 # Подключаем админку
 app.include_router(admin_router)
 
-@app.get("/")
+# Подключаем WebSockets
+app.include_router(ws_router)
+
+@app.get(
+    "/",
+    tags=["System"],
+    summary="Root | Проверка статуса",
+    description="**EN:** Root endpoint to check if the FastMock server is running.\n\n**RU:** Корневой эндпоинт для проверки работоспособности сервера FastMock."
+)
 async def root() -> dict[str, str]:
     return {"message": f"Welcome to {settings.app_name}. Use /_admin to manage the server."}
 

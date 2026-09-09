@@ -29,7 +29,17 @@ def save_data(path: str, data: Dict[str, Any]) -> Dict[str, Any]:
         data["id"] = item_id
         
     app_state.db[collection][item_id] = data
+    app_state.save_db()
     return data
+
+def delete_data(path: str) -> bool:
+    """Удаляет данные из In-Memory БД (для DELETE запросов)."""
+    collection, item_id = _get_collection_and_id(path)
+    if collection in app_state.db and item_id in app_state.db[collection]:
+        del app_state.db[collection][item_id]
+        app_state.save_db()
+        return True
+    return False
 
 def get_data(path: str) -> Optional[Any]:
     """Ищет данные в In-Memory БД (для GET запросов)."""

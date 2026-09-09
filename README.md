@@ -14,6 +14,16 @@
 
 ![FastMock Preview](docs/assets/preview.png) *(You can place the generated image here)*
 
+## 🚀 Features at a glance
+1. **Dynamic OpenAPI Ingestion**: Drop your `openapi.yaml` in the folder or upload via Admin API. The endpoints are generated on the fly.
+2. **Realistic Payload Generation**: Automatically generates realistic data (names, emails, UUIDs, dates) based on JSON Schema types using `Faker`.
+3. **In-Memory CRUD**: Remembers what you `POST` and returns it on `GET`.
+4. **Chaos Engineering**: Simulate slow 3G networks or random server crashes (HTTP 500, 503) globally or per-request using HTTP headers.
+
+## 📖 Detailed Documentation
+For deep-dive instructions, check the full usage guide:
+👉 **[Read the Full Documentation (English)](docs/USAGE_EN.md)**
+
 ## 🚀 Quick Start
 
 ### Option 1: Install via pip (Recommended)
@@ -30,7 +40,7 @@ git clone https://github.com/Artem-SPb/fastmock.git
 cd fastmock
 docker compose up
 ```
-Open **http://127.0.0.1:8000/docs** in your browser.
+Open **http://127.0.0.1:8000/docs** in your browser!
 
 ## 👨‍💻 Author
 **Artem-SPb** 

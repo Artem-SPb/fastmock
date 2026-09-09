@@ -1,7 +1,9 @@
 import re
-from typing import Any, Dict, Optional, Tuple, Pattern
+from re import Pattern
+from typing import Any
 
 from fastmock.core.state import app_state
+
 
 def path_to_regex(openapi_path: str) -> Pattern[str]:
     """Преобразует OpenAPI путь (/users/{id}) в регулярное выражение для матчинга."""
@@ -9,7 +11,7 @@ def path_to_regex(openapi_path: str) -> Pattern[str]:
     pattern = re.sub(r'\{([^}]+)\}', r'(?P<\1>[^/]+)', openapi_path)
     return re.compile(f"^{pattern}$")
 
-def find_operation(method: str, path: str) -> Tuple[Optional[str], Optional[Dict[str, Any]]]:
+def find_operation(method: str, path: str) -> tuple[str | None, dict[str, Any] | None]:
     """
     Ищет операцию в загруженной спецификации по HTTP методу и пути.
     Возвращает (openapi_path_key, operation_dict).
@@ -36,7 +38,7 @@ def find_operation(method: str, path: str) -> Tuple[Optional[str], Optional[Dict
                     
     return None, None
 
-def get_response_schema(operation: Dict[str, Any], status_code: str = "200") -> Optional[Dict[str, Any]]:
+def get_response_schema(operation: dict[str, Any], status_code: str = "200") -> dict[str, Any] | None:
     """Извлекает JSON Schema для ответа с указанным кодом (по умолчанию 200)."""
     responses = operation.get("responses", {})
     response = responses.get(status_code) or responses.get(int(status_code)) or responses.get("default")

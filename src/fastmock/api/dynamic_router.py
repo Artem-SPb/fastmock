@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from fastmock.core.state import app_state
-from fastmock.services import openapi_parser, data_generator, crud_manager
+from fastmock.services import crud_manager, data_generator, openapi_parser
 
 router = APIRouter()
 
@@ -25,7 +25,7 @@ async def catch_all(request: Request, path: str):
         )
         
     # 2. Ищем операцию в спеке
-    spec_path, operation = openapi_parser.find_operation(request.method, full_path)
+    _spec_path, operation = openapi_parser.find_operation(request.method, full_path)
     
     if not operation:
         raise HTTPException(

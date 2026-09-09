@@ -1,10 +1,12 @@
 import asyncio
 import random
+
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from fastmock.core.state import app_state
+
 
 class ChaosMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):

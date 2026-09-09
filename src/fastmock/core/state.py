@@ -1,12 +1,14 @@
 import json
 import os
-from typing import Any, Dict
+from typing import Any
+
 from fastmock.core.config import settings
+
 
 class AppState:
     def __init__(self) -> None:
-        self.spec: Dict[str, Any] | None = None
-        self.db: Dict[str, Dict[str, Any]] = {}
+        self.spec: dict[str, Any] | None = None
+        self.db: dict[str, dict[str, Any]] = {}
         
         self.chaos_delay_ms: int = 0
         self.chaos_error_rate: float = 0.0

@@ -1,8 +1,8 @@
 import asyncio
 import json
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from typing import Any, Dict
+
 from faker import Faker
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 router = APIRouter()
 fake = Faker()

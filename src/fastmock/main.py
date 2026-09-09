@@ -1,10 +1,11 @@
 import os
-import yaml
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
+
 import jsonref
 import uvicorn
-from contextlib import asynccontextmanager
+import yaml
 from fastapi import FastAPI
-from typing import AsyncGenerator
 
 from fastmock.core.config import settings
 from fastmock.core.state import app_state
@@ -54,9 +55,9 @@ Upload your OpenAPI spec via `/_admin/specs` and get a working mock API instantl
     lifespan=lifespan
 )
 
-from fastmock.api.middlewares import ChaosMiddleware
 from fastmock.api.admin_routes import router as admin_router
 from fastmock.api.dynamic_router import router as mock_router
+from fastmock.api.middlewares import ChaosMiddleware
 from fastmock.api.ws_router import router as ws_router
 
 # Добавляем Middleware (порядок важен)

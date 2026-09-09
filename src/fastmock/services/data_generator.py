@@ -1,9 +1,10 @@
-from typing import Any, Dict
+from typing import Any
+
 from faker import Faker
 
 fake = Faker()
 
-def generate_mock_data(schema: Dict[str, Any]) -> Any:
+def generate_mock_data(schema: dict[str, Any]) -> Any:
     """Генерирует фиктивные данные на основе JSON Schema."""
     if not schema:
         return None
@@ -31,7 +32,7 @@ def generate_mock_data(schema: Dict[str, Any]) -> Any:
     else:
         return generate_field("unknown", schema)
 
-def generate_field(name: str, schema: Dict[str, Any]) -> Any:
+def generate_field(name: str, schema: dict[str, Any]) -> Any:
     """Генерирует значение для конкретного поля, учитывая его имя и формат."""
     
     if "example" in schema:

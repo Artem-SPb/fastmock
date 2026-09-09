@@ -1,7 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
-from fastmock.main import app
+
 from fastmock.core.state import app_state
+from fastmock.main import app
 
 client = TestClient(app)
 

@@ -1,9 +1,10 @@
 import uuid
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
 
 from fastmock.core.state import app_state
 
-def _get_collection_and_id(path: str) -> Tuple[str, Optional[str]]:
+
+def _get_collection_and_id(path: str) -> tuple[str, str | None]:
     """Эвристика: разбиваем путь на коллекцию и ID (например, /users/123 -> users, 123)."""
     parts = [p for p in path.split("/") if p]
     if not parts:
@@ -16,7 +17,7 @@ def _get_collection_and_id(path: str) -> Tuple[str, Optional[str]]:
         # Нечетное количество: /users -> collection="users", id=None
         return parts[-1], None
 
-def save_data(path: str, data: Dict[str, Any]) -> Dict[str, Any]:
+def save_data(path: str, data: dict[str, Any]) -> dict[str, Any]:
     """Сохраняет данные из POST/PUT в In-Memory БД."""
     collection, item_id = _get_collection_and_id(path)
     
@@ -41,7 +42,7 @@ def delete_data(path: str) -> bool:
         return True
     return False
 
-def get_data(path: str) -> Optional[Any]:
+def get_data(path: str) -> Any | None:
     """Ищет данные в In-Memory БД (для GET запросов)."""
     collection, item_id = _get_collection_and_id(path)
     

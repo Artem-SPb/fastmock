@@ -1,5 +1,5 @@
-import yaml
 import jsonref
+import yaml
 from fastapi import APIRouter, File, UploadFile
 from pydantic import BaseModel, Field
 
@@ -70,7 +70,7 @@ async def upload_spec(file: UploadFile = File(..., description="**EN:** OpenAPI 
         title = app_state.spec.get("info", {}).get("title", "Unknown") if isinstance(app_state.spec, dict) else "Unknown"
         return {"message": f"Spec '{title}' loaded successfully."}
     except Exception as e:
-        return {"error": f"Failed to parse spec: {str(e)}"}
+        return {"error": f"Failed to parse spec: {e!s}"}
 
 @router.delete(
     "/specs",
@@ -93,7 +93,7 @@ async def list_routes():
     routes = []
     for path, path_item in app_state.spec["paths"].items():
         if isinstance(path_item, dict):
-            for method in path_item.keys():
+            for method in path_item:
                 if method.lower() in ["get", "post", "put", "delete", "patch"]:
                     routes.append(f"{method.upper()} {path}")
                 

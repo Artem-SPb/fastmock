@@ -1,5 +1,6 @@
 import typer
 import uvicorn
+
 from fastmock.core.config import settings
 
 app = typer.Typer(help="FastMock API Engine CLI")

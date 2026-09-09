@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  fastmock:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      # Монтируем файл спецификации (если он есть локально)
+      # - ./openapi.yaml:/app/openapi.yaml
+      - ./src:/app/src
+    environment:
+      - DEBUG=1

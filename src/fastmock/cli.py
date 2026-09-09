@@ -23,7 +23,7 @@ def start(
         settings.persist_path = persist
 
     typer.echo("=" * 50)
-    typer.echo(f"Starting FastMock API Engine")
+    typer.echo("Starting FastMock API Engine")
     typer.echo(f"➜  Local:   http://127.0.0.1:{port}/docs")
     if host == "0.0.0.0":
         typer.echo(f"➜  Network: http://<your-network-ip>:{port}/docs")

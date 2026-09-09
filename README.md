@@ -14,36 +14,23 @@
 
 ![FastMock Preview](docs/assets/preview.png) *(You can place the generated image here)*
 
-## 🚀 Features at a glance
-1. **Dynamic OpenAPI Ingestion**: Drop your `openapi.yaml` in the folder or upload via Admin API. The endpoints are generated on the fly.
-2. **Realistic Payload Generation**: Automatically generates realistic data (names, emails, UUIDs, dates) based on JSON Schema types using `Faker`.
-3. **In-Memory CRUD**: Remembers what you `POST` and returns it on `GET`.
-4. **Chaos Engineering**: Simulate slow 3G networks or random server crashes (HTTP 500, 503) globally or per-request using HTTP headers.
+## 🚀 Quick Start
 
-## 📖 Detailed Documentation
-For deep-dive instructions, check the full usage guide:
-👉 **[Read the Full Documentation (English)](docs/USAGE_EN.md)**
+### Option 1: Install via pip (Recommended)
+```bash
+pip install fastmock-api
+fastmock --port 8080
+```
 
-## 🛠 Quick Start (Docker)
+> ⚠️ **Important Note for Windows Users:** The console might say `Uvicorn running on http://0.0.0.0:8080`. This means the server is accessible on your local network. However, Windows browsers **cannot** open `0.0.0.0` directly. Please use **[http://127.0.0.1:8080/docs](http://127.0.0.1:8080/docs)** instead.
 
-The easiest way to run FastMock is via Docker.
-
-1. **Install from PyPI (Recommended):**
-   ```bash
-   pip install fastmock-api
-   ```
-
-2. **Or clone the repository (for development):**
+### Option 2: Run via Docker
 ```bash
 git clone https://github.com/Artem-SPb/fastmock.git
 cd fastmock
-```
-2. Place your `openapi.yaml` in the root directory (optional).
-3. Run the container:
-```bash
 docker compose up
 ```
-4. Open **http://127.0.0.1:8000/docs** in your browser!
+Open **http://127.0.0.1:8000/docs** in your browser.
 
 ## 👨‍💻 Author
 **Artem-SPb** 
